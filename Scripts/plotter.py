@@ -1,8 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import scipy.stats as stats
 import numpy as np
 import seaborn as sns
+sns.set(color_codes=True)
 
 dtypes = {'Claim Number':str,
 	'Date Received':str,
@@ -37,6 +38,7 @@ plt.title('All Claims Over Time')
 plt.ylabel('Claims')
 fig.legend_.remove()
 plt.savefig('../plots/all_claims.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -47,13 +49,21 @@ times = data[['Date Received', 'Incident Date']].copy()
 times['Time Elapsed'] = times['Date Received'] - times['Incident Date']
 
 time_deltas = times['Time Elapsed']/np.timedelta64(1, 'D')
+time_deltas = time_deltas[~ time_deltas.isnull()]
 time_deltas = time_deltas[(0 <= time_deltas) & (time_deltas <= 150)]
 
-sns.distplot(time_deltas)
+fig = sns.distplot(time_deltas, kde = False, fit = stats.gamma)
 plt.title('Time Elapsed Between Incident and Claim')
 plt.xlabel('Days')
 plt.ylabel('Density')
+
+
+(a, loc, scale) = stats.gamma.fit(time_deltas)
+plt.legend(['Gamma dist. fit (a={0:.2f}, loc={1:.2f}, scale={2:.2f})'.format(a, loc, scale), 'Time Elapsed'])
 plt.savefig('../plots/wait_time.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
+
+(D, p) = stats.kstest(time_deltas, 'gamma', args=(a, loc, scale))
 
 
 
@@ -69,12 +79,14 @@ fig = sns.countplot(y='Status', data=payments)
 plt.title('Status of Claims')
 plt.xlabel('Count')
 plt.savefig('../plots/status.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 fig = sns.countplot(y='Status', data=payments)
 plt.title('Status of Claims')
 plt.xlabel('Count (Logarithmic Scale)')
 fig.set_xscale('log')
 plt.savefig('../plots/log_status.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -87,6 +99,7 @@ plt.title('Fraction of Claim Returned When Settling')
 plt.xlabel('Fraction')
 plt.ylabel('Count')
 plt.savefig('../plots/settled.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -116,6 +129,7 @@ fig = sns.tsplot(data=airlines, time = 'Incident Date', value = 'Claims', condit
 plt.xticks(fig.get_xticks(), pd.to_datetime(fig.get_xticks()).year)
 plt.title('Claims Over Time for Major Airlines')
 plt.savefig('../plots/by_airline.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -142,6 +156,7 @@ fig = sns.tsplot(data=airports, time = 'Incident Date', value = 'Claims', condit
 plt.xticks(fig.get_xticks(), pd.to_datetime(fig.get_xticks()).year)
 plt.title('Claims Over Time for Major Airports')
 plt.savefig('../plots/by_airport.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -162,6 +177,7 @@ weeks.rename(columns = {"Claim Number":"Claims"}, inplace = True)
 fig = sns.tsplot(data=weeks, time = 'Week', value = 'Claims', unit='Year')
 plt.title('Claims Over a Year')
 plt.savefig('../plots/avg_year.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -180,6 +196,7 @@ days.rename(columns = {"Claim Number":"Claims"}, inplace = True)
 fig = sns.tsplot(data=days, time = 'Day', value = 'Claims', unit='Year')
 plt.title('Claims Over a Year')
 plt.savefig('../plots/avg_year_day.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -200,6 +217,7 @@ sns.countplot(y='Item Category', data=items)
 plt.title('Category of Items Lost/Damaged (Top 11)')
 plt.xlabel('Count')
 plt.savefig('../plots/items.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -223,6 +241,7 @@ h1, l1 = fig1.get_legend_handles_labels()
 h2, l2 = fig2.get_legend_handles_labels()
 plt.legend(h1+h2, l1+l2)
 plt.savefig('../plots/computers.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 
@@ -234,12 +253,14 @@ fig = sns.countplot(y='Claim Site', data=place)
 plt.title('Site of Claims (Top 7)')
 plt.xlabel('Count')
 plt.savefig('../plots/sites.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 fig = sns.countplot(y='Claim Site', data=place)
 plt.title('Site of Claims (Top 7)')
 plt.xlabel('Count (Logarithmic Scale)')
 fig.set_xscale('log')
 plt.savefig('../plots/log_sites.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 types = data['Claim Type'].str.split('/', expand = True)
@@ -255,6 +276,7 @@ fig = sns.countplot(y='Claim Type', data=types)
 plt.title('Types of Claims Made (Top 6)')
 plt.xlabel('Count')
 plt.savefig('../plots/type.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
 
 
 fig = sns.countplot(y='Claim Type', data=types)
@@ -262,3 +284,4 @@ plt.title('Types of Claims Made (Top 6)')
 plt.xlabel('Count (Logarithmic Scale)')
 fig.set_xscale('log')
 plt.savefig('../plots/log_type.png', dpi = 400, bbox_inches = 'tight')
+plt.close()
