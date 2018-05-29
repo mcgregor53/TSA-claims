@@ -4,6 +4,7 @@
 \usetheme{Boadilla}
 \usepackage{graphicx}
 \usepackage{soul}
+\usepackage{hyperref}
 
 \title{Analysis of TSA claims data}
 \author{Dan McGregor}
@@ -20,7 +21,7 @@
 \begin{frame}
 	\frametitle{Overview of the data set:}
 	\begin{itemize}
-		\item TSA claims data from 2002-2017  in~.pdf and~.xlsx format from \textcolor{blue}{\ul{https://www.dhs.gov/tsa-claims-data}}.
+		\item TSA claims data from 2002-2017  in~.pdf and~.xlsx format from \url{https://www.dhs.gov/tsa-claims-data}.
 
 		\item Tables contain over 220,828 unique claims
 
@@ -31,6 +32,8 @@
 				Item Category & Claim Amount & Status & Close Amount\\
 				Disposition
 			\end{tabular}
+
+		\item See \url{https://github.com/mcgregor36/TSA-claims} for the code used in this analysis.
 	\end{itemize}
 \end{frame}
 

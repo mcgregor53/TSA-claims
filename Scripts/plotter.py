@@ -65,6 +65,10 @@ payments['Status'] = payments['Status'].str.replace('^Insufficient[\d\D]*$', 'In
 payments['Status'] = payments['Status'].str.replace('[\d\D]*assigned[\d\D]*', 'Assigned')
 payments['Status'] = payments['Status'].str.replace('^Pending[\d\D]*$', 'Pending')
 
+fig = sns.countplot(y='Status', data=payments)
+plt.title('Status of Claims')
+plt.xlabel('Count')
+plt.savefig('../plots/status.png', dpi = 400, bbox_inches = 'tight')
 
 fig = sns.countplot(y='Status', data=payments)
 plt.title('Status of Claims')
@@ -193,7 +197,7 @@ items = pd.DataFrame(items, columns=['Item Category'])
 
 
 sns.countplot(y='Item Category', data=items)
-plt.title('Category of Items Lost/Damaged')
+plt.title('Category of Items Lost/Damaged (Top 11)')
 plt.xlabel('Count')
 plt.savefig('../plots/items.png', dpi = 400, bbox_inches = 'tight')
 
@@ -227,7 +231,12 @@ place = data[['Claim Number', 'Claim Site']].copy()
 place['Claim Site'] = place['Claim Site'].str.replace('[\s]', '')
 
 fig = sns.countplot(y='Claim Site', data=place)
-plt.title('Site of Claims')
+plt.title('Site of Claims (Top 7)')
+plt.xlabel('Count')
+plt.savefig('../plots/sites.png', dpi = 400, bbox_inches = 'tight')
+
+fig = sns.countplot(y='Claim Site', data=place)
+plt.title('Site of Claims (Top 7)')
 plt.xlabel('Count (Logarithmic Scale)')
 fig.set_xscale('log')
 plt.savefig('../plots/log_sites.png', dpi = 400, bbox_inches = 'tight')
@@ -243,7 +252,13 @@ types = pd.DataFrame(types, columns=['Claim Type'])
 
 
 fig = sns.countplot(y='Claim Type', data=types)
-plt.title('Types of Claims Made')
+plt.title('Types of Claims Made (Top 6)')
+plt.xlabel('Count')
+plt.savefig('../plots/type.png', dpi = 400, bbox_inches = 'tight')
+
+
+fig = sns.countplot(y='Claim Type', data=types)
+plt.title('Types of Claims Made (Top 6)')
 plt.xlabel('Count (Logarithmic Scale)')
 fig.set_xscale('log')
 plt.savefig('../plots/log_type.png', dpi = 400, bbox_inches = 'tight')
